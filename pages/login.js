@@ -8,6 +8,8 @@ const Login = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    console.log(username);
+    console.log(password);
     try {
       const response = await fetch('/api/login', {
         method: 'POST',

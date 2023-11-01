@@ -1,4 +1,4 @@
-// pages/api/login.js
+// /api/login.js
 
 import pool from '../../db';
 

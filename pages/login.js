@@ -1,8 +1,10 @@
 // pages/login.js
 
 import { useState } from 'react';
+import { useRouter } from 'next/router';
 
 const Login = () => {
+  const router = useRouter();
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
 
@@ -21,10 +23,11 @@ const Login = () => {
 
       if (response.ok) {
         // Successful login
+        router.push('/');
         alert('Login successful');
       } else {
         // Failed login
-        alert('Login failed');
+        alert('Login failed...try again');
       }
     } catch (error) {
       console.error(error);

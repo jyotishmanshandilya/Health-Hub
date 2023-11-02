@@ -5,7 +5,7 @@ const Login = () => {
   const router = useRouter();
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
-  const [role, setRole] = useState('customer'); // Added role state
+  const [role, setRole] = useState('customer');
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -20,14 +20,11 @@ const Login = () => {
       });
 
       if (response.ok) {
-        // Successful login
         router.push('/');
         alert('Login successful');
       } else if (response.status === 401) {
-        // Failed login
         alert('Login failed...try again');
       } else if (response.status === 401) {
-        // Role not recognized
         alert('Role not recognized');
       }
     } catch (error) {
@@ -37,37 +34,44 @@ const Login = () => {
   };
 
   return (
-    <div>
-      <h1>Login</h1>
-      <form onSubmit={handleSubmit}>
-        <label>
-          Username:
-          <input
-            type="text"
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
-          />
-        </label>
-        <br />
-        <label>
-          Password:
-          <input
-            type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-          />
-        </label>
-        <br />
-        <label>
-          Role:
-          <select value={role} onChange={(e) => setRole(e.target.value)}>
-            <option value="customer">Customer</option>
-            <option value="seller">Seller</option>
-          </select>
-        </label>
-        <br />
-        <button type="submit">Log In</button>
-      </form>
+    <div className="bg-gray-100 min-h-screen flex items-center justify-center">
+      <div className="bg-white p-8 rounded shadow-lg w-full max-w-md">
+        <h1 className="text-2xl font-semibold mb-4">Login</h1>
+        <form onSubmit={handleSubmit}>
+          <div className="mb-4">
+            <label className="block text-sm font-medium">Username:</label>
+            <input
+              type="text"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
+              className="border border-gray-300 rounded w-full p-2"
+            />
+          </div>
+          <div className="mb-4">
+            <label className="block text-sm font-medium">Password:</label>
+            <input
+              type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              className="border border-gray-300 rounded w-full p-2"
+            />
+          </div>
+          <div className="mb-4">
+            <label className="block text-sm font-medium">Role:</label>
+            <select
+              value={role}
+              onChange={(e) => setRole(e.target.value)}
+              className="border border-gray-300 rounded w-full p-2"
+            >
+              <option value="customer">Customer</option>
+              <option value="seller">Seller</option>
+            </select>
+          </div>
+          <button type="submit" className="bg-blue-500 text-white p-2 rounded w-full">
+            Log In
+          </button>
+        </form>
+      </div>
     </div>
   );
 };

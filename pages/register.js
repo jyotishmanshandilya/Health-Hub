@@ -31,68 +31,75 @@ const Register = () => {
   };
 
   return (
-    <div>
-      <h1>Register</h1>
-      <form onSubmit={handleSubmit}>
-        <label>
-          Username:
-          <input
-            type="text"
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
-          />
-        </label>
-        <br />
-        <label>
-          Password:
-          <input
-            type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-          />
-        </label>
-        <br />
-        <label>
-          Role:
-          <select value={role} onChange={(e) => setRole(e.target.value)}>
-            <option value="customer">Customer</option>
-            <option value="seller">Seller</option>
-          </select>
-        </label>
-        <br />
-        {role === 'customer' && (
-          <>
-            <label>
-              Name:
-              <input
-                type="text"
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-              />
-            </label>
-            <br />
-            <label>
-              Phone Number:
-              <input
-                type="text"
-                value={p_no}
-                onChange={(e) => setPNo(e.target.value)}
-              />
-            </label>
-            <br />
-            <label>
-              Email:
-              <input
-                type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-              />
-            </label>
-            <br />
-          </>
-        )}
-        <button type="submit">Register</button>
-      </form>
+    <div className="bg-gray-100 min-h-screen flex items-center justify-center">
+      <div className="bg-white p-8 rounded shadow-lg w-full max-w-md">
+        <h1 className="text-2xl font-semibold mb-4">Register</h1>
+        <form onSubmit={handleSubmit}>
+          <div className="mb-4">
+            <label className="block text-sm font-medium">Username:</label>
+            <input
+              type="text"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
+              className="border border-gray-300 rounded w-full p-2"
+            />
+          </div>
+          <div className="mb-4">
+            <label className="block text-sm font-medium">Password:</label>
+            <input
+              type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              className="border border-gray-300 rounded w-full p-2"
+            />
+          </div>
+          <div className="mb-4">
+            <label className="block text-sm font-medium">Role:</label>
+            <select
+              value={role}
+              onChange={(e) => setRole(e.target.value)}
+              className="border border-gray-300 rounded w-full p-2"
+            >
+              <option value="customer">Customer</option>
+              <option value="seller">Seller</option>
+            </select>
+          </div>
+          {role === 'customer' && (
+            <>
+              <div className="mb-4">
+                <label className="block text-sm font-medium">Name:</label>
+                <input
+                  type="text"
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                  className="border border-gray-300 rounded w-full p-2"
+                />
+              </div>
+              <div className="mb-4">
+                <label className="block text-sm font-medium">Phone Number:</label>
+                <input
+                  type="text"
+                  value={p_no}
+                  onChange={(e) => setPNo(e.target.value)}
+                  className="border border-gray-300 rounded w-full p-2"
+                />
+              </div>
+              <div className="mb-4">
+                <label className="block text-sm font-medium">Email:</label>
+                <input
+                  type="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  className="border border-gray-300 rounded w-full p-2"
+                />
+              </div>
+            </>
+          )}
+          <button type="submit" className="bg-blue-500 text-white p-2 rounded w-full">
+            Register
+          </button>
+        </form>
+      </div>
     </div>
   );
 };

@@ -1,5 +1,6 @@
+'use client'
 import { useState } from 'react';
-import { useRouter } from 'next/router';
+import { useRouter } from 'next/navigation';
 
 const Login = () => {
   const router = useRouter();
@@ -11,7 +12,7 @@ const Login = () => {
     e.preventDefault();
 
     try {
-      const response = await fetch('/api/login_auth', {
+      const response = await fetch('/api/auth/login', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -20,12 +21,12 @@ const Login = () => {
       });
 
       if (response.ok) {
-        router.push('/');
-        alert('Login successful');
+            alert('Login successful');
+            router.push('/');
       } else if (response.status === 401) {
-        alert('Login failed...try again');
+            alert('Login failed...try again');
       } else if (response.status === 401) {
-        alert('Role not recognized');
+            alert('Role not recognized');
       }
     } catch (error) {
       console.error(error);

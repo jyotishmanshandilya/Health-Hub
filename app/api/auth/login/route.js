@@ -1,10 +1,11 @@
 // pages/api/login.js
 
-import pool from '../../db';
+import pool from '../../../../db';
+import { NextResponse } from "next/server";
 
-export default async (req, res) => {
-  if (req.method === 'POST') {
-    const { username, password, role } = req.body;
+export async function POST(req, res){
+    const body = await req.json();
+    const { username, password, role } = body;
 
     try {
       const client = await pool.connect();
@@ -24,22 +25,22 @@ export default async (req, res) => {
 
         if (result.rows.length > 0) {
           // Authentication successful
-          res.status(200).json({ message: 'Login successful' });
+          console.log("logged in succesfully");
+          return NextResponse.json({ error: 'Login Successful' }, { status: 200 })
         } else {
           // Authentication failed
-          res.status(401).json({ message: 'Login failed' });
+          console.log("logged in failed");
+          return NextResponse.json({ error: 'Login Failed' }, { status: 401 })
         }
       } else {
         // Role not recognized
-        res.status(401).json({ message: 'Role not recognized' });
+        return NextResponse.json({ error: 'Role not recognized' }, { status: 401 })
       }
 
       client.release();
     } catch (error) {
       console.error(error);
-      res.status(500).json({ message: 'Internal server error' });
+      return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
     }
-  } else {
-    res.status(405).end(); // Method not allowed
-  }
+  
 };

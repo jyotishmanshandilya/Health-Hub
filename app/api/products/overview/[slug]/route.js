@@ -5,7 +5,7 @@ export async function GET(req, {params}){
   const productId = params.slug;
     try {
       const client = await pool.connect();
-      const productResult = await client.query(`SELECT p_id, p_name, description, cat_id, price, image1_url FROM product WHERE p_id=${productId}`);
+      const productResult = await client.query(`SELECT p_id, p_name, description, cat_id, price, image1 FROM product WHERE p_id=${productId}`);
       const product = productResult.rows[0];
       // console.log(product);
       client.release();

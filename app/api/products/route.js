@@ -4,7 +4,7 @@ import { NextResponse } from 'next/server';
 export async function GET(req, res){
   try {
     const client = await pool.connect();
-    const result = await client.query('SELECT p_id, p_name, description, price, image1_url FROM product');
+    const result = await client.query('SELECT p_id, p_name, description, price, Image1 FROM product');
     const products = result.rows;
     client.release();
 

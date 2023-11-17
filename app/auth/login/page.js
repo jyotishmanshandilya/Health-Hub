@@ -21,12 +21,12 @@ const Login = () => {
       });
 
       if (response.ok) {
-            alert('Login successful');
-            router.push('/');
+        alert('Login successful');
+        router.push('/');
       } else if (response.status === 401) {
-            alert('Login failed...try again');
+        alert('Login failed...try again');
       } else if (response.status === 401) {
-            alert('Role not recognized');
+        alert('Role not recognized');
       }
     } catch (error) {
       console.error(error);
@@ -45,7 +45,7 @@ const Login = () => {
               type="text"
               value={username}
               onChange={(e) => setUsername(e.target.value)}
-              className="border border-gray-300 rounded w-full p-2"
+              className="border border-gray-300 rounded w-full p-2 focus:outline-none focus:border-blue-500"
             />
           </div>
           <div className="mb-4">
@@ -54,7 +54,7 @@ const Login = () => {
               type="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="border border-gray-300 rounded w-full p-2"
+              className="border border-gray-300 rounded w-full p-2 focus:outline-none focus:border-blue-500"
             />
           </div>
           <div className="mb-4">
@@ -62,13 +62,16 @@ const Login = () => {
             <select
               value={role}
               onChange={(e) => setRole(e.target.value)}
-              className="border border-gray-300 rounded w-full p-2"
+              className="border border-gray-300 rounded w-full p-2 focus:outline-none focus:border-blue-500"
             >
               <option value="customer">Customer</option>
               <option value="seller">Seller</option>
             </select>
           </div>
-          <button type="submit" className="bg-blue-500 text-white p-2 rounded w-full">
+          <button
+            type="submit"
+            className="bg-blue-500 text-white p-2 rounded w-full hover:bg-blue-600 focus:outline-none focus:bg-blue-600"
+          >
             Log In
           </button>
         </form>

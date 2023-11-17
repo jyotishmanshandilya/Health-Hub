@@ -54,7 +54,7 @@ if (newReviewId !== undefined) {
         const newProductId = lastProductId + 1;
 
         const insertProductQuery = `
-        INSERT INTO product (p_id, seller_id, p_name, cat_id, price, description, image1_url, review_id)
+        INSERT INTO product (p_id, seller_id, p_name, cat_id, price, description, image1, review_id)
         VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
         RETURNING *; 
         `;
@@ -66,7 +66,7 @@ if (newReviewId !== undefined) {
         newProductDetails.cat_id,  // Use the category ID from your state
         newProductDetails.price,   // Use the price from your state
         newProductDetails.description,  // Use the description from your state
-        newProductDetails.image1_url,  // Use the image URL from your state
+        newProductDetails.image1,  // Use the image URL from your state
         newReviewId  // New review_id
         ]);
 

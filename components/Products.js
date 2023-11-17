@@ -36,7 +36,7 @@ export default function Products() {
             <div key={product.p_id} className="group relative">
               <div className="aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-md bg-gray-200 lg:aspect-none group-hover:opacity-75 lg:h-80">
                 <img
-                  src={product.image1_url}
+                  src={product.image1}
                   alt={product.p_name}
                   className="h-full w-full object-cover object-center lg:h-full lg:w-full"
                 />

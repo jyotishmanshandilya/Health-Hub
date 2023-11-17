@@ -42,7 +42,7 @@ export async function POST(req, res) {
         );
 
         console.log('Logged in successfully');
-        return NextResponse.json({ error: 'Login Successful', loginId: newLoginId }, { status: 200 });
+        return NextResponse.json({ message: 'Login Successful', loginId: newLoginId }, { status: 200 });
       } else {
         // Authentication failed
         console.log('Login failed');

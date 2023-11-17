@@ -1,5 +1,3 @@
-// pages/api/login.js
-
 import pool from '../../../../db';
 import { NextResponse } from "next/server";
 
@@ -26,7 +24,7 @@ export async function POST(req, res){
         if (result.rows.length > 0) {
           // Authentication successful
           console.log("logged in succesfully");
-          return NextResponse.json({ error: 'Login Successful' }, { status: 200 })
+          return NextResponse.json({ message: 'Login Successful' }, { status: 200 });
         } else {
           // Authentication failed
           console.log("logged in failed");

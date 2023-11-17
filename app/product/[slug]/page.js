@@ -15,7 +15,7 @@ export default function ProductPage({ params }) {
   useEffect(() => {
     async function fetchProductDetails() {
       try {
-        const response = await fetch(`/api/single_route/${params.slug}`);
+        const response = await fetch(`/api/products/overview/${params.slug}`);
         if (response.ok) {
           const data = await response.json();
           setProductDetails(data);

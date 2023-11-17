@@ -1,10 +1,9 @@
-// pages/api/register.js
+import pool from '../../../../db';
+import { NextResponse } from "next/server";
 
-import pool from '../../db';
-
-export default async (req, res) => {
-  if (req.method === 'POST') {
-    const { username, password, role, name, p_no, email } = req.body;
+export async function POST(req, res){
+    const body = await req.json();
+    const { username, password, role, name, p_no, email } = body;
     let userInsertResult; // Declare the variable here
 
     try {
@@ -37,12 +36,11 @@ export default async (req, res) => {
       const user_id = userInsertResult.rows[0][role + '_id'];
 
       client.release();
-      res.status(200).json({ message: 'Registration successful', user_id });
+      return NextResponse.json({ message: 'Registration Successful', user_id }, { status: 200 });
+    //   res.status(200).json({ message: 'Registration successful', user_id });
     } catch (error) {
       console.error(error);
-      res.status(500).json({ message: 'Internal server error' });
+      return NextResponse.json({ error: 'Internal Server error', user_id }, { status: 200 });
+    //   res.status(500).json({ message: 'Internal server error' });
     }
-  } else {
-    res.status(405).end();
-  }
 };

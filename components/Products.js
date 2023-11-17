@@ -7,7 +7,7 @@ export default function Products() {
   useEffect(() => {
     async function fetchProducts() {
       try {
-        const response = await fetch('/api/product_route'); // Assuming you create a new API route named 'products'
+        const response = await fetch('/api/products'); // Assuming you create a new API route named 'products'
         if (response.ok) {
           const data = await response.json();
           setProducts(data);
@@ -21,6 +21,10 @@ export default function Products() {
 
     fetchProducts();
   }, []);
+
+  if(!products){
+    return <div>Loading...</div>
+  }
 
   return (
     <div className="bg-white">

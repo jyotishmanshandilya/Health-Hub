@@ -1,6 +1,9 @@
+'use client'
 import { useState } from 'react';
+import { useRouter } from 'next/navigation';
 
 const Register = () => {
+    const router = useRouter();
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [role, setRole] = useState('customer');
@@ -11,7 +14,7 @@ const Register = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await fetch('/api/register_route', {
+      const response = await fetch('/api/auth/register', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -20,7 +23,8 @@ const Register = () => {
       });
 
       if (response.ok) {
-        alert('Registration successful');
+          alert('Registration successful');
+          router.push('/auth/login');
       } else {
         alert('Registration failed');
       }

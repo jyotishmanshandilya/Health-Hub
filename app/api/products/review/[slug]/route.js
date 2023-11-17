@@ -6,7 +6,7 @@ export async function GET(req, res){
     try {
       const client = await pool.connect();
       const reviewsResult = await client.query(
-        `SELECT review_id, description, rating FROM review WHERE review_id IN (SELECT review_id FROM product WHERE p_id = ${productId})`
+        `SELECT review_id, description, rating FROM review WHERE review_id IN (SELECT review_id FROM has WHERE p_id = $1)`, [productId]
       );
       const reviews = reviewsResult.rows;
       console.log(reviews);
@@ -31,53 +31,36 @@ export async function GET(req, res){
 
     try {
       const client = await pool.connect();
-const getLastreviewIdResult = await client.query(
-  'SELECT MAX(review_id) FROM review'
-);
-const lastreviewId = getLastreviewIdResult.rows[0].max || 0;
-const newreview = lastreviewId + 1;
-const insertReviewQuery = `
-  INSERT INTO review (review_id, description, rating, date)
-  VALUES ($1, $2, $3, $4)
-`;
+      const getLastreviewIdResult = await client.query(
+        'SELECT MAX(review_id) FROM review'
+      );
+      const lastreviewId = getLastreviewIdResult.rows[0].max || 0;
+      const newreview = lastreviewId + 1;
+      const insertReviewQuery = `
+        INSERT INTO review (review_id, description, rating)
+        VALUES ($1, $2, $3)
+      `;
 
-const result = await client.query(insertReviewQuery, [newreview, description, rating, date]);
+      await client.query(insertReviewQuery, [newreview, description, rating]);
 
-const newReviewId = result.rows[0]?.review_id;
+      const insertGivesQuery = `
+        INSERT INTO gives (cust_id, review_id, rdate)
+        VALUES ((SELECT cust_id FROM login ORDER BY login_id DESC LIMIT 1), $1, $2)
+      `;
 
-if (newReviewId !== undefined) {
-  // Now, increment p_id for each new product
-        const getLastProductIdResult = await client.query(
-            'SELECT MAX(p_id) FROM product'
-        );
-        const lastProductId = getLastProductIdResult.rows[0].max || 0;
-        const newProductId = lastProductId + 1;
+      await client.query(insertGivesQuery, [newreview, date]);
 
-        const insertProductQuery = `
-        INSERT INTO product (p_id, seller_id, p_name, cat_id, price, description, image1, review_id)
-        VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
-        RETURNING *; 
-        `;
+      const insertHasQuery = `
+        INSERT INTO has (p_id, review_id)
+        VALUES ($1, $2)
+      `;
 
-        const insertedProduct = await client.query(insertProductQuery, [
-        newProductId,  // New p_id
-        productId,     // Existing seller_id (assuming it's associated with the product)
-        newProductDetails.p_name,  // Use the product name from your state
-        newProductDetails.cat_id,  // Use the category ID from your state
-        newProductDetails.price,   // Use the price from your state
-        newProductDetails.description,  // Use the description from your state
-        newProductDetails.image1,  // Use the image URL from your state
-        newReviewId  // New review_id
-        ]);
+      await client.query(insertHasQuery, [productId, newreview]);
 
-        // Log the inserted product
-        console.log('Inserted Product:', insertedProduct.rows[0]);
+      client.release();
 
-} else {
-  console.error('Added');
-  res.status(500).json({ error: 'Internal server error' });
-}}
- catch (error) {
+      res.status(200).json({ message: 'Review added successfully.' });
+    } catch (error) {
       console.error('Error adding review:', error);
       res.status(500).json({ error: 'Internal server error' });
     }

@@ -1,22 +1,21 @@
 'use client'
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 
 const CartPage = () => {
-  const [cartItems, setCartItems] = useState([]); // State to hold cart data
+  const [cartItems, setCartItems] = useState([]);
   const [subtotal, setSubtotal] = useState(0);
   const [orderPlaced, setOrderPlaced] = useState(false);
   const [deliveryAddress, setDeliveryAddress] = useState('');
 
   useEffect(() => {
-    // Fetch cart data from the API
     async function fetchCartData() {
       try {
-        const response = await fetch('/api/checkout'); // Replace with your API endpoint
+        const response = await fetch('/api/checkout');
+
         if (response.ok) {
           const data = await response.json();
           setCartItems(data);
 
-          // Calculate the subtotal
           const total = data.reduce((acc, product) => acc + product.price * product.quantity, 0);
           setSubtotal(total);
         } else {
@@ -28,11 +27,10 @@ const CartPage = () => {
     }
 
     fetchCartData();
-  }, []); // Empty dependency array ensures the effect runs once when the component mounts
+  }, []);
 
   const handlePlaceOrder = async () => {
     try {
-      // Send the delivery address to the backend
       const response = await fetch('/api/placeorder', {
         method: 'POST',
         headers: {
@@ -62,38 +60,27 @@ const CartPage = () => {
             <div className="flow-root">
               <ul role="list" className="-my-6 divide-y divide-gray-200">
                 {cartItems.map((product) => (
-                  <li key={product.id} className="flex py-6">
-                  <div className="h-24 w-24 flex-shrink-0 overflow-hidden rounded-md border border-gray-200">
-                    <img
-                      src={product.imageSrc}
-                      alt={product.imageAlt}
-                      className="h-full w-full object-cover object-center"
-                    />
-                  </div>
+                  <li key={product.p_id} className="flex py-6">
+                    <div className="h-24 w-24 flex-shrink-0 overflow-hidden rounded-md border border-gray-200">
+                      <img
+                        src={product.image1}
+                        alt={product.name}
+                        className="h-full w-full object-cover object-center"
+                      />
+                    </div>
 
-                  <div className="ml-4 flex flex-1 flex-col">
-                    <div>
-                      <div className="flex justify-between text-base font-medium text-gray-900">
-                        <h3>
-                          <a href={product.href}>{product.name}</a>
-                        </h3>
-                        <p className="ml-4">{product.price}</p>
+                    <div className="ml-4 flex flex-1 flex-col">
+                      <div>
+                        <div className="flex justify-between text-base font-medium text-gray-900">
+                          <h3>{product.name}</h3>
+                          <p className="ml-4">{product.price}</p>
+                        </div>
                       </div>
-                      <p className="mt-1 text-sm text-gray-500">{product.color}</p>
-                    </div>
-                    <div className="flex flex-1 items-end justify-between text-sm">
-                      <p className="text-gray-500">Qty {product.quantity}</p>
-                      <div className="flex">
-                        <button
-                          type="button"
-                          className="font-medium text-indigo-600 hover:text-indigo-500"
-                        >
-                          Remove
-                        </button>
+                      <div className="flex flex-1 items-end justify-between text-sm">
+                        <p className="text-gray-500">Qty {product.quantity}</p>
                       </div>
                     </div>
-                  </div>
-                </li>
+                  </li>
                 ))}
               </ul>
             </div>
@@ -136,3 +123,4 @@ const CartPage = () => {
 };
 
 export default CartPage;
+

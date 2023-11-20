@@ -35,8 +35,8 @@ const Login = () => {
   };
 
   return (
-    <div className="bg-gray-100 min-h-screen flex items-center justify-center">
-      <div className="bg-white p-8 rounded shadow-lg w-full max-w-md">
+    <div className="min-h-screen flex items-center justify-center" >
+      <div className="p-8 rounded shadow-lg w-full max-w-md bg-gray-100">
         <h1 className="text-2xl font-semibold mb-4">Login</h1>
         <form onSubmit={handleSubmit}>
           <div className="mb-4">
@@ -45,7 +45,7 @@ const Login = () => {
               type="text"
               value={username}
               onChange={(e) => setUsername(e.target.value)}
-              className="border border-gray-300 rounded w-full p-2 focus:outline-none focus:border-blue-500"
+              className="border p-2 rounded w-full focus:outline-none focus:border-blue-500"
             />
           </div>
           <div className="mb-4">
@@ -54,7 +54,7 @@ const Login = () => {
               type="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="border border-gray-300 rounded w-full p-2 focus:outline-none focus:border-blue-500"
+              className="border p-2 rounded w-full focus:outline-none focus:border-blue-500"
             />
           </div>
           <div className="mb-4">
@@ -62,7 +62,7 @@ const Login = () => {
             <select
               value={role}
               onChange={(e) => setRole(e.target.value)}
-              className="border border-gray-300 rounded w-full p-2 focus:outline-none focus:border-blue-500"
+              className="border p-2 rounded w-full focus:outline-none focus:border-blue-500"
             >
               <option value="customer">Customer</option>
               <option value="seller">Seller</option>

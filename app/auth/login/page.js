@@ -22,7 +22,7 @@ const Login = () => {
 
       if (response.ok) {
         alert('Login successful');
-        if(role=='seller'){
+        if(role==='seller'){
           router.push('/seller');
         }else{
         router.push('/');

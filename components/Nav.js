@@ -209,13 +209,15 @@ const Nav = () => {
   return (
     <nav className='w-full flex mb-16 pt-3 px-10'>
       <div className='w-full flex justify-between'>
-        <Link href='/' className='flex gap-2 flex-center'>
-            <p className='border p-2 px-3 rounded-full'>Health Hub</p>
-        </Link>
-        <Link href='/user' className='flex gap-2 flex-center'>
-            <p className='border p-2 px-3 rounded-full'>User Profile</p>
-        </Link>
-        <button onClick={()=>setOpen((prev)=>!prev)} className='border p-2 px-3 rounded-full'>Cart</button>
+          <Link href='/' className='flex gap-2 flex-center'>
+              <p className='border p-2 px-3 rounded-full'>Health Hub</p>
+          </Link>
+        <div className='flex gap-5'>
+          <Link href='/user' className='flex gap-2 flex-center'>
+              <p className='border p-2 px-3 rounded-full'>User Profile</p>
+          </Link>
+          <button onClick={()=>setOpen((prev)=>!prev)} className='border p-2 px-3 rounded-full'>Cart</button>
+        </div>
       </div>
       {setOpen && <Cart setOpen={setOpen} open={open}/>}
       {/* Desktop navigation */}

@@ -34,6 +34,30 @@ const products = [
 ]
 
 const Cart = ({setOpen, open})=>{
+  const [cartItems, setCartItems] = useState([]);
+  const [subtotal, setSubtotal] = useState(0);
+
+  useEffect(() => {
+    async function fetchCartData() {
+      try {
+        const response = await fetch('/api/cart');
+
+        if (response.ok) {
+          const data = await response.json();
+          setCartItems(data);
+
+          const total = data.reduce((acc, product) => acc + product.price * product.quantity, 0);
+          setSubtotal(total);
+        } else {
+          console.error('Failed to fetch cart data.');
+        }
+      } catch (error) {
+        console.error('An error occurred while fetching cart data:', error);
+      }
+    }
+
+    fetchCartData();
+  }, []);
 
   return (
     <Transition.Root show={open} as={Fragment}>
@@ -83,12 +107,12 @@ const Cart = ({setOpen, open})=>{
                       <div className="mt-8">
                         <div className="flow-root">
                           <ul role="list" className="-my-6 divide-y divide-gray-200">
-                            {products.map((product) => (
+                            {cartItems.map((product) => (
                               <li key={product.id} className="flex py-6">
                                 <div className="h-24 w-24 flex-shrink-0 overflow-hidden rounded-md border border-gray-200">
                                   <img
-                                    src={product.imageSrc}
-                                    alt={product.imageAlt}
+                                    src={product.image1}
+                                    alt={product.name}
                                     className="h-full w-full object-cover object-center"
                                   />
                                 </div>
@@ -97,11 +121,10 @@ const Cart = ({setOpen, open})=>{
                                   <div>
                                     <div className="flex justify-between text-base font-medium text-gray-900">
                                       <h3>
-                                        <a href={product.href}>{product.name}</a>
+                                        <a href={`/product/${product.productId}`}>{product.name}</a>
                                       </h3>
                                       <p className="ml-4">{product.price}</p>
                                     </div>
-                                    <p className="mt-1 text-sm text-gray-500">{product.color}</p>
                                   </div>
                                   <div className="flex flex-1 items-end justify-between text-sm">
                                     <p className="text-gray-500">Qty {product.quantity}</p>

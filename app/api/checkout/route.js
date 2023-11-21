@@ -32,11 +32,9 @@ export async function GET(req, res){
         price: row.price
       }));
       return NextResponse.json(cartItems, {status:200});
-      //res.status(200).json(cartItems);
       client.release();
     } catch (error) {
       console.error(error);
       return NextResponse.json({ message: 'Internal server error' }, {status:500});
-      //res.status(500).json({ message: 'Internal server error' });
     }
 };

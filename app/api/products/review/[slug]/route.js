@@ -1,25 +1,27 @@
+import { NextResponse } from 'next/server';
 import pool from '../../../../../db';
 
-export async function GET(req, res){
-  if (req.method === 'GET') {
-    const productId = req.query.slug;
-    try {
-      const client = await pool.connect();
-      const reviewsResult = await client.query(
-        `SELECT review_id, description, rating FROM review WHERE review_id IN (SELECT review_id FROM has WHERE p_id = $1)`, [productId]
-      );
-      const reviews = reviewsResult.rows;
-      console.log(reviews);
-      client.release();
-
-      res.status(200).json(reviews);
-    } catch (error) {
-      console.error('Error fetching reviews:', error);
-      res.status(500).json({ error: 'Internal server error' });
-    }
-  } else if (req.method === 'POST') {
-    const productId = req.query.slug;
-    const { description, rating, date, newProductDetails } = req.body;
+export async function GET(req,{params}){
+  const productId = params.slug;
+  try {
+    const client = await pool.connect();
+    const reviewsResult = await client.query(
+      `SELECT review_id, description, rating FROM review WHERE review_id IN (SELECT review_id FROM has WHERE p_id = $1)`, [productId]
+    );
+    const reviews = reviewsResult.rows;
+    console.log(reviews);
+    client.release();
+    return NextResponse.json(reviews, {status:200});
+  } catch (error) {
+    console.error('Error fetching reviews:', error);
+    return NextResponse.json({ error: 'Internal server error' }, {status:500});
+  }
+}
+  
+export async function POST(req,{params}){  
+    const productId = params.slug;
+    const body = await req.json();
+    const { description, rating, date, newProductDetails } = body;
 
     // Log the request body
     console.log('Request Body:', {
@@ -58,11 +60,11 @@ export async function GET(req, res){
       await client.query(insertHasQuery, [productId, newreview]);
 
       client.release();
-
-      res.status(200).json({ message: 'Review added successfully.' });
+      return NextResponse.json({ message: 'Review added successfully.' }, {status:200});
+      //res.status(200).json({ message: 'Review added successfully.' });
     } catch (error) {
       console.error('Error adding review:', error);
-      res.status(500).json({ error: 'Internal server error' });
+      return NextResponse.json({ error: 'Internal server error' }, {status:500});
+      //res.status(500).json({ error: 'Internal server error' });
     }
-  }
 }

@@ -22,7 +22,11 @@ const Login = () => {
 
       if (response.ok) {
         alert('Login successful');
+        if(role=='seller'){
+          router.push('/seller');
+        }else{
         router.push('/');
+        }
       } else if (response.status === 401) {
         alert('Login failed...try again');
       } else if (response.status === 401) {

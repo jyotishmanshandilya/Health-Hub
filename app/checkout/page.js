@@ -1,14 +1,11 @@
   'use client'
   import React, { useState, useEffect } from 'react';
-  import Del from '@/components/Del';
 
   const CartPage = () => {
     const [cartItems, setCartItems] = useState([]);
     const [subtotal, setSubtotal] = useState(0);
     const [orderPlaced, setOrderPlaced] = useState(false);
-    const [isModalOpen, setIsModalOpen] = useState(false);
-    const [orderDetails, setOrderDetails] = useState(null);
-
+  
     useEffect(() => {
       async function fetchCartData() {
         try {
@@ -59,18 +56,16 @@
   
         if (response.ok) {
           const orderDetails = await response.json();
-          setOrderDetails(orderDetails); // Store order details in state
-          setIsModalOpen(true);  // Store order details in state
-          console.log('Order details fetched successfully.');
+          // Display order details in a simple message box
+          alert(JSON.stringify(orderDetails));
+          setOrderPlaced(true);
+          console.log("Order details fetched successfully.");
         } else {
           console.error('Failed to fetch order details.');
         }
       } catch (error) {
         console.error('An error occurred while fetching order details:', error);
       }
-    };
-    const closeModal = () => {
-      setIsModalOpen(false);
     };
   
     return (
@@ -111,24 +106,9 @@
             </div>
           </div>
           <div className="border-t border-gray-200 px-4 py-6 sm:px-6">
-          {orderPlaced ? (
-        <>
-          <p className="text-green-600 text-lg font-medium">Order Placed Successfully!</p>
-          <div className="mt-8">
-            <h2 className="text-lg font-medium mb-4">Order Details</h2>
-            {orderDetails && (
-              <div className="bg-gray-100 p-4 rounded-md">
-                <p className="text-gray-800">Check Delivery and Payment details
-                </p>
-                
-              </div>
-            )}
-          </div>
-          {isModalOpen && (
-            <Del isOpen={isModalOpen} closeModal={closeModal} orderDetails={orderDetails} />
-          )}
-        </>
-      ) : (
+            {orderPlaced ? (
+              <p className="text-green-600 text-lg font-medium">Order Placed Successfully!</p>
+            ) : (
               <>
                 <div className="flex justify-between text-base font-medium text-gray-900">
                   <p>Subtotal</p>

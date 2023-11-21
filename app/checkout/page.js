@@ -1,4 +1,4 @@
-  'use client'
+'use client'
   import React, { useState, useEffect } from 'react';
   import Del from '@/components/Del';
 
@@ -152,4 +152,3 @@
   };
   
   export default CartPage;
-  

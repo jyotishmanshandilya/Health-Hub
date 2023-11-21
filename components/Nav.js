@@ -7,6 +7,9 @@ import { Fragment } from 'react'
 import { Dialog, Transition } from '@headlessui/react'
 import { XMarkIcon } from '@heroicons/react/24/outline'
 
+const LoginPage = () => {
+  const router = useRouter();
+};
 //Cart Component
 const products = [
   {
@@ -194,7 +197,7 @@ const Nav = () => {
   const [providers, setProviders] = useState(null);
   const [toggleDropdown, settoggleDropdown] = useState(false);
   const [open, setOpen] = useState(false);
-
+  
   // useEffect(()=>{
   //   const setUpProviders = async()=>{
   //     const res = await getProviders();
@@ -208,6 +211,9 @@ const Nav = () => {
       <div className='w-full flex justify-between'>
         <Link href='/' className='flex gap-2 flex-center'>
             <p className='border p-2 px-3 rounded-full'>Health Hub</p>
+        </Link>
+        <Link href='/user' className='flex gap-2 flex-center'>
+            <p className='border p-2 px-3 rounded-full'>User Profile</p>
         </Link>
         <button onClick={()=>setOpen((prev)=>!prev)} className='border p-2 px-3 rounded-full'>Cart</button>
       </div>

@@ -41,6 +41,7 @@ const CartPage = () => {
 
       if (response.ok) {
         setOrderPlaced(true);
+        console.log("Order placed successfully..");
       } else {
         console.error('Failed to place the order.');
       }

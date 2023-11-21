@@ -1,9 +1,13 @@
-import pool from '../../db';
+import { NextResponse } from 'next/server';
+import pool from '../../../db';
 
-export default async (req, res) => {
+//gotta seperate this into multiple crud operation(post and delete) 
+
+export async function POST(req, res){
   let client;
   try {
-    const { deliveryAddress } = req.body;
+    const body = await req.json();
+    const { deliveryAddress } = body;
 
     client = await pool.connect();
     await client.query('BEGIN');
@@ -39,14 +43,16 @@ export default async (req, res) => {
     // Clear the AddsToCart entries for the customer
     const clearCartQuery = 'DELETE FROM AddsToCart WHERE Cust_id = $1';
     await client.query(clearCartQuery, [custId]);
-
     await client.query('COMMIT');
 
-    res.status(200).json({ orderId: nextOrderId });
+    return NextResponse.json({ orderId: nextOrderId }, {status:200});
+    //res.status(200).json({ orderId: nextOrderId });
+
   } catch (error) {
     await client.query('ROLLBACK');
     console.error('Error in placing order:', error); // Log the specific error
-    res.status(500).json({ error: 'Database error' });
+    return NextResponse.json({ error: 'Database error' }, {status:500});
+    //res.status(500).json({ error: 'Database error' });
   } finally {
     client.release();
   }

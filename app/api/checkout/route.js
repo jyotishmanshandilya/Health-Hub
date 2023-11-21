@@ -1,7 +1,7 @@
-import pool from '../../db';
+import { NextResponse } from 'next/server';
+import pool from '../../../db';
 
-export default async (req, res) => {
-  if (req.method === 'GET') {
+export async function GET(req, res){
     try {
       const client = await pool.connect();
 
@@ -12,15 +12,15 @@ export default async (req, res) => {
 
       // Use the fetched Cust_id in the query
       const query = `SELECT 
-    Product.P_id, 
-    Product.P_name, 
-    AddsToCart.Quantity, 
-    Product.Price, 
-    Product.Image1 
-  FROM Product 
-  JOIN AddsToCart 
-  ON Product.P_id = AddsToCart.P_id 
-  WHERE AddsToCart.Cust_id = ${custId}`;
+        Product.P_id, 
+        Product.P_name, 
+        AddsToCart.Quantity, 
+        Product.Price, 
+        Product.Image1 
+        FROM Product 
+        JOIN AddsToCart 
+        ON Product.P_id = AddsToCart.P_id 
+        WHERE AddsToCart.Cust_id = ${custId}`;
 
       const result = await client.query(query);
 
@@ -31,14 +31,12 @@ export default async (req, res) => {
         image1: row.image1,
         price: row.price
       }));
-
-      res.status(200).json(cartItems);
+      return NextResponse.json(cartItems, {status:200});
+      //res.status(200).json(cartItems);
       client.release();
     } catch (error) {
       console.error(error);
-      res.status(500).json({ message: 'Internal server error' });
+      return NextResponse.json({ message: 'Internal server error' }, {status:500});
+      //res.status(500).json({ message: 'Internal server error' });
     }
-  } else {
-    res.status(405).end(); // Method not allowed
-  }
 };

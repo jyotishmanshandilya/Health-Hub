@@ -23,7 +23,6 @@ export async function GET(req, res){
         WHERE AddsToCart.Cust_id = ${custId}`;
 
       const result = await client.query(query);
-
       const cartItems = result.rows.map((row) => ({
         productId: row.p_id,
         name: row.p_name,
@@ -31,6 +30,7 @@ export async function GET(req, res){
         image1: row.image1,
         price: row.price
       }));
+      
       return NextResponse.json(cartItems, {status:200});
       //res.status(200).json(cartItems);
       client.release();

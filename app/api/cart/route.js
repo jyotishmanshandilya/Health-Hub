@@ -2,37 +2,50 @@ import { NextResponse } from 'next/server';
 import pool from '../../../db';
 
 export async function POST(req, res){
-    const body = await req.json();
-    const { product_id } = body;
-    try {
+  const body = await req.json();
+  const { product_id } = body;
+  try {
       const client = await pool.connect();
 
       const fetchCustIdQuery = 'SELECT Cust_id FROM Login ORDER BY Login_id DESC LIMIT 1';
       const custIdResult = await client.query(fetchCustIdQuery);
       const cust_id = custIdResult.rows[0].cust_id;
 
+      // Check the quantity in the Product table
+      const checkQuantityQuery = 'SELECT Quantity FROM Product WHERE P_id = $1';
+      const quantityResult = await client.query(checkQuantityQuery, [product_id]);
+      const quantity = quantityResult.rows[0].quantity;
+
+      // If the quantity is less than 1, return an error message
+      if (quantity < 1) {
+          return NextResponse.json({ message: 'Product is out of stock.' }, {status: 409});
+      }
+
       const selectQuery = 'SELECT * FROM AddsToCart WHERE P_id = $1 AND Cust_id = $2';
       const result = await client.query(selectQuery, [product_id, cust_id]);
 
       if (result.rows.length > 0) {
-        const updateQuery = 'UPDATE AddsToCart SET Quantity = Quantity + 1 WHERE P_id = $1 AND Cust_id = $2';
-        await client.query(updateQuery, [product_id, cust_id]);
-
-        return NextResponse.json({ message: 'Product quantity updated in cart.' }, {status: 200});
-        //res.status(200).json({ message: 'Product quantity updated in cart.' });
+          const updateProductQuery = 'UPDATE Product SET Quantity = Quantity - 1 WHERE P_id = $1';
+          await client.query(updateProductQuery, [product_id]);
+          const updateQuery = 'UPDATE AddsToCart SET Quantity = Quantity + 1 WHERE P_id = $1 AND Cust_id = $2';
+          await client.query(updateQuery, [product_id, cust_id]);
+       
+          return NextResponse.json({ message: 'Product quantity updated in cart.' }, {status: 200});
       } else {
-        const insertQuery = 'INSERT INTO AddsToCart (Cust_id, P_id, Quantity) VALUES ($1, $2, 1)';
-        await client.query(insertQuery, [cust_id, product_id]);
+          const insertQuery = 'INSERT INTO AddsToCart (Cust_id, P_id, Quantity) VALUES ($1, $2, 1)';
+          await client.query(insertQuery, [cust_id, product_id]);
 
-        return NextResponse.json({ message: 'Product added to cart.' }, {status: 201});
-        //res.status(201).json({ message: 'Product added to cart.' });
+          // Decrement the quantity in the Product table
+          const updateProductQuery = 'UPDATE Product SET Quantity = Quantity - 1 WHERE P_id = $1';
+          await client.query(updateProductQuery, [product_id]);
+
+          return NextResponse.json({ message: 'Product added to cart.' }, {status: 201});
       }
       client.release();
-    } catch (error) {
+  } catch (error) {
       console.error(error);
       return NextResponse.json({ message: 'Internal server error' }, {status: 500});
-      //res.status(500).json({ message: 'Internal server error' });
-    }
+  }
 };
 
 export async function GET(req, res){

@@ -2,9 +2,9 @@
 import React, { useEffect, useState } from 'react';
 
 const User = () => {
-  //const [userInfo, setUserInfo] = useState({});
-  //const [orderHistory, setOrderHistory] = useState({});
-  //const [allReviews, setallReviews] = useState([]);
+  const [userInfo, setUserInfo] = useState({});
+  const [orderHistory, setOrderHistory] = useState({});
+  const [allReviews, setallReviews] = useState({});
   const [allData, setAllData] = useState({});
 
   useEffect(() => {
@@ -26,9 +26,9 @@ const User = () => {
   }, [])
   
 
-  const userInfo = allData.customer_info;
-  const orderHistory = allData.order_history;
-  const allReviews = allData.user_reviews;
+  // const userInfo = allData.customer_info;
+  // const orderHistory = allData.order_history;
+  // const allReviews = allData.user_reviews;
 
   console.log("all data: ",allData);
   console.log("customer data: ",userInfo);
@@ -39,21 +39,24 @@ const User = () => {
     <div className="min-h-screen flex items-center justify-center">
       <div className="p-8 rounded shadow-lg w-full max-w-md bg-gray-100">
         <h1 className="text-2xl font-bold mb-4">Order and Payment History</h1>
-
+  
+        <div className="mb-8">
+          <h2 className="text-xl font-semibold mb-4">User Information</h2>
+          <pre>{JSON.stringify(userInfo, null, 2)}</pre> {/*this function fetches user data - for now it displays useState({})*/ }
+        </div>
+  
         <div className="mb-8">
           <h2 className="text-xl font-semibold mb-4">Order History</h2>
-          {//order history details
-          }
+          <pre>{JSON.stringify(orderHistory, null, 2)}</pre>
         </div>
-
+  
         <div>
-          <h2 className="text-xl font-semibold mb-4">Payment History</h2>
-         {//payment history details
-          }
+          <h2 className="text-xl font-semibold mb-4">User Reviews</h2>
+          <pre>{JSON.stringify(allReviews, null, 2)}</pre>
         </div>
       </div>
     </div>
-  );
+  );  
 };
 
 export default User;

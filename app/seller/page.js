@@ -3,7 +3,6 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 
 const Seller = () => {
-  // Define the state variables using useState
   const [productName, setProductName] = useState('');
   const [productID, setProductID] = useState('');
   const [categoryID, setCategoryID] = useState('');
@@ -19,7 +18,6 @@ const Seller = () => {
 
   const handleSubmit = async(event) => {
     event.preventDefault();
-    // Add your form submission logic here, including handling image uploads
     try {
       const response = await fetch('/api/seller', {
         method: 'POST',
@@ -44,7 +42,7 @@ const Seller = () => {
       }
     } catch (error) {
       console.error(error);
-      alert('Internal Sever Error');
+      alert('Internal Server Error');
     }
 
     console.log('Form submitted with the following data:', {
@@ -66,14 +64,17 @@ const Seller = () => {
             <label className="block text-sm font-medium">Product Name:</label>
             <input
               type="text"
-              name="name"
+              value={productName}
+              onChange={(e) => setProductName(e.target.value)}
               className="border p-2 rounded w-full focus:outline-none focus:border-blue-500"
             />
-          </div><div className="mb-4">
+          </div>
+          <div className="mb-4">
             <label className="block text-sm font-medium">Product ID:</label>
             <input
               type="number"
-              name="price"
+              value={productID}
+              onChange={(e) => setProductID(e.target.value)}
               className="border p-2 rounded w-full focus:outline-none focus:border-blue-500"
             />
           </div>
@@ -81,7 +82,8 @@ const Seller = () => {
             <label className="block text-sm font-medium">Category ID:</label>
             <input
               type="number"
-              name="price"
+              value={categoryID}
+              onChange={(e) => setCategoryID(e.target.value)}
               className="border p-2 rounded w-full focus:outline-none focus:border-blue-500"
             />
           </div>
@@ -89,15 +91,8 @@ const Seller = () => {
             <label className="block text-sm font-medium">Price:</label>
             <input
               type="number"
-              name="price"
-              className="border p-2 rounded w-full focus:outline-none focus:border-blue-500"
-            />
-          </div>
-          <div className="mb-4">
-            <label className="block text-sm font-medium">Quantity:</label>
-            <input
-              type="number"
-              name="price"
+              value={price}
+              onChange={(e) => setPrice(e.target.value)}
               className="border p-2 rounded w-full focus:outline-none focus:border-blue-500"
             />
           </div>
@@ -105,7 +100,8 @@ const Seller = () => {
             <label className="block text-sm font-medium">Description:</label>
             <input
               type="text"
-              name="desc"
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
               className="border p-2 rounded w-full focus:outline-none focus:border-blue-500"
             />
           </div>
@@ -113,7 +109,6 @@ const Seller = () => {
             <label className="block text-sm font-medium">Image Link:</label>
             <input
               type="text"
-              name="imageLink"
               value={imageLink}
               onChange={(e) => setImageLink(e.target.value)}
               className="border p-2 rounded w-full focus:outline-none focus:border-blue-500"

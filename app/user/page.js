@@ -2,23 +2,38 @@
 import React, { useEffect, useState } from 'react';
 
 const User = () => {
-  const [userInfo, setUserInfo] = useState([]);
-  const [orderHistory, setOrderHistory] = useState([]);
-  const [allReviews, setallReviews] = useState([]);
+  //const [userInfo, setUserInfo] = useState({});
+  //const [orderHistory, setOrderHistory] = useState({});
+  //const [allReviews, setallReviews] = useState([]);
+  const [allData, setAllData] = useState({});
 
   useEffect(() => {
     async function fetchUserData(){
       try {
-        const data = await fetch('/api/user');
-        console.log(data);
+        const response = await fetch('/api/user');
+        if(response.ok){
+          const data = await response.json();
+          setAllData(data);
+        }
+        else{
+          console.error('Failed to fetch user data.');
+        }
       } catch (error) {
         console.error('An error occurred while fetching user data:', error);
       }
     }
-
     fetchUserData();
   }, [])
   
+
+  const userInfo = allData.customer_info;
+  const orderHistory = allData.order_history;
+  const allReviews = allData.user_reviews;
+
+  console.log("all data: ",allData);
+  console.log("customer data: ",userInfo);
+  console.log("order history data: ",orderHistory);
+  console.log("user review data: ", allReviews);
 
   return (
     <div className="min-h-screen flex items-center justify-center">

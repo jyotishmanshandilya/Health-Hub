@@ -1,10 +1,11 @@
 'use client'
+import Link from 'next/link';
 import React, { useEffect, useState } from 'react';
 
 const User = () => {
-  const [userInfo, setUserInfo] = useState({});
-  const [orderHistory, setOrderHistory] = useState({});
-  const [allReviews, setallReviews] = useState({});
+  //const [userInfo, setUserInfo] = useState({});
+  //const [orderHistory, setOrderHistory] = useState({});
+  //const [allReviews, setallReviews] = useState({});
   const [allData, setAllData] = useState({});
 
   useEffect(() => {
@@ -26,33 +27,57 @@ const User = () => {
   }, [])
   
 
-  // const userInfo = allData.customer_info;
-  // const orderHistory = allData.order_history;
-  // const allReviews = allData.user_reviews;
+  const userInfo = allData.customer_info;
+  const orderHistory = allData.order_history;
+  const allReviews = allData.user_reviews;
 
-  console.log("all data: ",allData);
-  console.log("customer data: ",userInfo);
+  //console.log("all data: ",allData);
+  //console.log("customer data: ",userInfo);
   console.log("order history data: ",orderHistory);
-  console.log("user review data: ", allReviews);
-
+  //console.log("user review data: ", allReviews);
+  
   return (
     <div className="min-h-screen flex items-center justify-center">
       <div className="p-8 rounded shadow-lg w-full max-w-md bg-gray-100">
         <h1 className="text-2xl font-bold mb-4">Order and Payment History</h1>
-  
+    
         <div className="mb-8">
           <h2 className="text-xl font-semibold mb-4">User Information</h2>
-          <pre>{JSON.stringify(userInfo, null, 2)}</pre> {/*this function fetches user data - for now it displays useState({})*/ }
+          {userInfo &&
+            <ul>
+              <li>Username: {userInfo.username}</li>
+              <li>Email: {userInfo.email}</li>
+              <li>Delivery Address: {userInfo.delivery_addr}</li>
+            </ul>
+          }
         </div>
-  
+
         <div className="mb-8">
           <h2 className="text-xl font-semibold mb-4">Order History</h2>
-          <pre>{JSON.stringify(orderHistory, null, 2)}</pre>
+          {orderHistory && orderHistory.map((product)=>(
+            <div>
+              <Link href={`/product/${product.productId}`}>{product.name}</Link>
+              <img
+                src={product.image1}
+                alt={product.name}
+                className="h-full w-full object-cover object-center"
+              />
+              <p>Rs. {product.price}</p>
+              <br/>
+            </div>
+          ))}
+
         </div>
   
         <div>
           <h2 className="text-xl font-semibold mb-4">User Reviews</h2>
-          <pre>{JSON.stringify(allReviews, null, 2)}</pre>
+          {allReviews && allReviews.map((review)=>(
+            <div>
+              <Link href={`/product/${review.productId}`}>{review.description}</Link>
+              <p>Rating: {review.rating}/5</p>
+              <br/>
+            </div>
+          ))}
         </div>
       </div>
     </div>

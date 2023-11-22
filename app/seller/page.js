@@ -17,9 +17,36 @@ const Seller = () => {
     router.back();
   };
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async(event) => {
     event.preventDefault();
     // Add your form submission logic here, including handling image uploads
+    try {
+      const response = await fetch('/api/seller', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ 
+          productName,
+          productID,
+          categoryID,
+          price,
+          description,
+          imageLink 
+        }),
+      });
+
+      if (response.ok) {
+        alert('Product Added successful');
+        router.push('/');
+      } else if (response.status === 500) {
+        alert('Failed....try again');
+      }
+    } catch (error) {
+      console.error(error);
+      alert('Internal Sever Error');
+    }
+
     console.log('Form submitted with the following data:', {
       productName,
       productID,

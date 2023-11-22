@@ -1,6 +1,25 @@
-import React from 'react';
+'use client'
+import React, { useEffect, useState } from 'react';
 
 const User = () => {
+  const [userInfo, setUserInfo] = useState([]);
+  const [orderHistory, setOrderHistory] = useState([]);
+  const [allReviews, setallReviews] = useState([]);
+
+  useEffect(() => {
+    async function fetchUserData(){
+      try {
+        const data = await fetch('/api/user');
+        console.log(data);
+      } catch (error) {
+        console.error('An error occurred while fetching user data:', error);
+      }
+    }
+
+    fetchUserData();
+  }, [])
+  
+
   return (
     <div className="min-h-screen flex items-center justify-center">
       <div className="p-8 rounded shadow-lg w-full max-w-md bg-gray-100">

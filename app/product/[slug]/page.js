@@ -62,20 +62,24 @@ export default function ProductPage({ params }) {
           date: new Date().toISOString(),
         }),
       });
-
+  
       if (response.ok) {
         // After successfully adding the review, fetch the updated reviews
         fetchProductReviews();
         setNewReview({ description: '', rating: 0 });
       } else {
-        console.error('Failed to add a review.');
+        const data = await response.json();
+        if (data.error) {
+          alert(data.error);
+        } else {
+          console.error('Failed to add a review.');
+        }
       }
     } catch (error) {
       console.error('An error occurred while adding a review:', error);
     }
   };
-
-  // Handle adding the product to the cart
+ // Handle adding the product to the cart
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {

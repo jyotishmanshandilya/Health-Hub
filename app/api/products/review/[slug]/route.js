@@ -17,22 +17,26 @@ export async function GET(req,{params}){
     return NextResponse.json({ error: 'Internal server error' }, {status:500});
   }
 }
-  
+
 export async function POST(req,{params}){  
     const productId = params.slug;
     const body = await req.json();
     const { description, rating, date, newProductDetails } = body;
 
-    // Log the request body
-    console.log('Request Body:', {
-      description,
-      rating,
-      date,
-      newProductDetails,
-    });
-
     try {
       const client = await pool.connect();
+
+      // Check if a review by the same customer for the same product already exists
+      const checkReviewExistsResult = await client.query(
+        `SELECT * FROM has WHERE p_id = $1 AND review_id IN (SELECT review_id FROM gives WHERE cust_id = (SELECT cust_id FROM login ORDER BY login_id DESC LIMIT 1))`, [productId]
+      );
+
+      if (checkReviewExistsResult.rows.length > 0) {
+        // If a review already exists, return an error message and stop further execution
+        client.release();
+        return NextResponse.json({ error: 'A customer can only review a product once.' }, {status:500});
+      }
+
       const getLastreviewIdResult = await client.query(
         'SELECT MAX(review_id) FROM review'
       );
@@ -61,10 +65,14 @@ export async function POST(req,{params}){
 
       client.release();
       return NextResponse.json({ message: 'Review added successfully.' }, {status:200});
-      //res.status(200).json({ message: 'Review added successfully.' });
     } catch (error) {
       console.error('Error adding review:', error);
-      return NextResponse.json({ error: 'Internal server error' }, {status:500});
-      //res.status(500).json({ error: 'Internal server error' });
+      
+      let errorMessage = 'Internal server error';
+      if (error.message === 'A customer can only review a product once.') {
+        errorMessage = error.message;
+      }
+
+      return NextResponse.json({ error: errorMessage }, {status:500});
     }
 }

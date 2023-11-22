@@ -1,4 +1,4 @@
-import pool from '../../../../db';
+import pool from '../../../db';
 import { NextResponse } from 'next/server';
 
 export async function POST(req, res) {

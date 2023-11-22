@@ -9,6 +9,7 @@ const Seller = () => {
   const [price, setPrice] = useState('');
   const [description, setDescription] = useState('');
   const [imageLink, setImageLink] = useState('');
+  const [quantity, setQuantity] = useState('');
 
   const router = useRouter();
 
@@ -93,6 +94,15 @@ const Seller = () => {
               type="number"
               value={price}
               onChange={(e) => setPrice(e.target.value)}
+              className="border p-2 rounded w-full focus:outline-none focus:border-blue-500"
+            />
+          </div>
+          <div className="mb-4">
+            <label className="block text-sm font-medium">Quantity:</label>
+            <input
+              type="number"
+              value={quantity}
+              onChange={(e) => setQuantity(e.target.value)}
               className="border p-2 rounded w-full focus:outline-none focus:border-blue-500"
             />
           </div>

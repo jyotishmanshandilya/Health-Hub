@@ -39,6 +39,11 @@ export async function POST(req, res){
         return NextResponse.json({ message: 'Registration Successful', user_id }, { status: 200 });
     } catch (error) {
         console.error(error);
-        return NextResponse.json({ error: 'Internal Server error' }, { status: 500 });
+        if (error.message.includes('User with email')) {
+            return NextResponse.json({ error: 'User with this username already exists' }, { status: 400 });
+        } else {
+            return NextResponse.json({ error: 'Internal Server error' }, { status: 500 });
+        }
     }
 };
+

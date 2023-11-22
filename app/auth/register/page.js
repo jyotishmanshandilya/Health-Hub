@@ -28,7 +28,7 @@ const Register = () => {
                 alert('Registration successful');
                 router.push('/auth/login');
             } else {
-                alert('Registration failed');
+                alert('User with this username already exists');
             }
         } catch (error) {
             console.error(error);
@@ -48,6 +48,7 @@ const Register = () => {
                             value={username}
                             onChange={(e) => setUsername(e.target.value)}
                             className="border border-gray-300 rounded w-full p-2"
+                            required
                         />
                     </div>
                     <div className="mb-4">
@@ -71,58 +72,66 @@ const Register = () => {
                         </select>
                     </div>
                     {role === 'customer' && (
-                        <>
-                            <div className="mb-4">
-                                <label className="block text-sm font-medium">Name:</label>
-                                <input
-                                    type="text"
-                                    value={name}
-                                    onChange={(e) => setName(e.target.value)}
-                                    className="border border-gray-300 rounded w-full p-2"
-                                />
-                            </div>
-                            <div className="mb-4">
-                                <label className="block text-sm font-medium">Phone Number:</label>
-                                <input
-                                    type="text"
-                                    value={p_no}
-                                    onChange={(e) => setPNo(e.target.value)}
-                                    className="border border-gray-300 rounded w-full p-2"
-                                />
-                            </div>
-                            <div className="mb-4">
-                                <label className="block text-sm font-medium">Email:</label>
-                                <input
-                                    type="email"
-                                    value={email}
-                                    onChange={(e) => setEmail(e.target.value)}
-                                    className="border border-gray-300 rounded w-full p-2"
-                                />
-                            </div>
-                       
-                    <div className="mb-4">
-                        <label className="block text-sm font-medium">Credit Card Number:</label>
-                        <input
-                            type="text"
-                            value={credit_card_no}
-                            onChange={(e) => setCreditCardNo(e.target.value)}
-                            className="border border-gray-300 rounded w-full p-2"
-                        />
-                    </div>
-                    <div className="mb-4">
-                        <label className="block text-sm font-medium">Delivery Address:</label>
-                        <input
-                            type="text"
-                            value={delivery_addr}
-                            onChange={(e) => setDeliveryAddress(e.target.value)}
-                            className="border border-gray-300 rounded w-full p-2"
-                        />
-                    </div>
-                    </>
-                )}
-                    <button type="submit" className="bg-blue-500 text-white p-2 rounded w-full">
-                        Register
-                    </button>
+    <>
+        <div className="mb-4">
+            <label className="block text-sm font-medium">Name:</label>
+            <input
+                type="text"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                pattern="[A-Za-z ]{1,}"
+                title="Please enter a valid name (only letters and spaces)"
+                className="border border-gray-300 rounded w-full p-2"
+                required
+            />
+                </div>
+                <div className="mb-4">
+                    <label className="block text-sm font-medium">Phone Number:</label>
+                    <input
+                        type="tel"
+                        value={p_no}
+                        onChange={(e) => setPNo(e.target.value)}
+                        pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}"
+                        title="Please enter a valid phone number (###-###-####)"
+                        className="border border-gray-300 rounded w-full p-2"
+                        required
+                    />
+                </div>
+                <div className="mb-4">
+                    <label className="block text-sm font-medium">Email:</label>
+                    <input
+                        type="email"
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
+                        className="border border-gray-300 rounded w-full p-2"
+                        required
+                    />
+                </div>
+                <div className="mb-4">
+                    <label className="block text-sm font-medium">Credit Card Number:</label>
+                    <input
+                        type="number"
+                        value={credit_card_no}
+                        onChange={(e) => setCreditCardNo(e.target.value)}
+                        className="border border-gray-300 rounded w-full p-2"
+                        required
+                    />
+                </div>
+                <div className="mb-4">
+                    <label className="block text-sm font-medium">Delivery Address:</label>
+                    <input
+                        type="text"
+                        value={delivery_addr}
+                        onChange={(e) => setDeliveryAddress(e.target.value)}
+                        className="border border-gray-300 rounded w-full p-2"
+                        required
+                    />
+                </div>
+            </>
+        )}
+        <button type="submit" className="bg-blue-500 text-white p-2 rounded w-full">
+            Register
+        </button>
                 </form>
             </div>
         </div>
@@ -130,3 +139,4 @@ const Register = () => {
 };
 
 export default Register;
+

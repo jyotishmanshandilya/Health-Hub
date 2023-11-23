@@ -238,10 +238,16 @@ const Nav = () => {
             <p className="text-xl font-bold">Health Hub</p>
           </Link>
           <div className="flex items-center gap-5">
-            <Link href="/user" className="hover:text-gray-300">
+            <Link href="/user" className="hover:text-gray-300 border px-3 py-1 rounded-full">
               <p>User Profile</p>
             </Link>
-            <button onClick={() => setOpen((prev) => !prev)} className="hover:text-gray-300">
+            <Link href="/auth/login" className="hover:text-gray-300 ">
+              <p>Sign in</p>
+            </Link>
+            <Link href="/auth/register" className="hover:text-gray-300">
+              <p>Register</p>
+            </Link>
+            <button onClick={() => setOpen((prev) => !prev)} className="border px-3 py-1 rounded-full hover:text-gray-300">
               Cart
             </button>
         </div>

@@ -126,7 +126,7 @@ export default function ProductPage({ params }) {
             <h3 className="sr-only">Product information</h3>
             <p className="text-3xl tracking-tight text-gray-900">Price: Rs. {productDetails?.price}</p>
   
-            <h3 className="sr-only">Reviews</h3>
+            <p className="text-3xl sr-only">Reviews</p>
             <div className="flex items-center">
               <a href={productDetails?.href} className="ml-3 text-sm font-medium text-indigo-600 hover:text-indigo-500">
                 {reviews.length} reviews

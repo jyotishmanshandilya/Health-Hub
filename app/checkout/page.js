@@ -95,7 +95,7 @@
             <>
               <div className="flex justify-between text-base font-medium text-gray-900">
                 <p>Subtotal</p>
-                <p>${subtotal.toFixed(2)}</p>
+                <p>Rs. {subtotal.toFixed(2)}</p>
               </div>
               <p className="mt-0.5 text-sm text-gray-500">Shipping and taxes calculated at checkout.</p>
               <div className="mt-6">

@@ -37,8 +37,8 @@ const Register = () => {
   };
 
   return (
-    <div className="bg-white min-h-screen flex items-center justify-center" style={{ backgroundImage: "url('/Bg.jpg')", backgroundSize: 'cover', backgroundPosition: 'center' }}>
-      <div className="p-8 rounded-lg shadow-lg w-full max-w-md bg-gray-100" style={{ backgroundColor: 'rgba(255, 255, 255, 0.9)', borderRadius: '10px' }}>
+    <div className="bg-white min-h-screen flex items-center justify-center " style={{ backgroundImage: "url('/Bg.jpg')", backgroundSize: 'cover', backgroundPosition: 'center' }}>
+      <div className="p-8 rounded-lg shadow-lg w-full max-w-md bg-gray-100 m-16" style={{ backgroundColor: 'rgba(255, 255, 255, 0.9)', borderRadius: '10px' }}>
         <h1 className="text-2xl font-semibold mb-4 text-white" style={{ fontFamily: 'Montserrat, sans-serif', fontWeight: 700, color: '#888' }}>Register</h1>
         <form onSubmit={handleSubmit}>
           <div className="mb-4">

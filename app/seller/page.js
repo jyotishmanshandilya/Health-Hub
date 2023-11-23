@@ -57,10 +57,10 @@ const Seller = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center">
-      <div className="p-8 rounded shadow-lg w-full max-w-md bg-gray-100">
-        <h1 className="text-2xl font-semibold mb-4">Seller Form</h1>
-        <form onSubmit={handleSubmit}>
+    <div className="min-h-screen flex items-center justify-center" style={{ backgroundImage: `url('/mainBg.jpg')`, backgroundSize: 'cover', backgroundPosition: 'center' }}>
+    <div className="p-8 rounded-lg shadow-lg w-full max-w-md bg-gray-100" style={{ backgroundColor: 'rgba(200, 200, 200, 0.9)', borderRadius: '10px' }}>
+      <h1 className="text-2xl font-semibold mb-4 text-white" style={{ fontFamily: 'Montserrat, sans-serif', fontWeight: 700, color: '#888' }}>Seller Form</h1>
+     <form onSubmit={handleSubmit}>
           <div className="mb-4">
             <label className="block text-sm font-medium">Product Name:</label>
             <input

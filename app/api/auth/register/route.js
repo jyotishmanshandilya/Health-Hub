@@ -1,44 +1,27 @@
-import pool from '../../../../db';
+import conn from '../../../../db';
 import { NextResponse } from "next/server";
 
 export async function POST(req, res){
     const body = await req.json();
-    const { username, password, role, p_no, email, credit_card_no, delivery_addr } = body;
+    const { password, phone_no, email } = body;
     let userInsertResult;
 
     try {
-        const client = await pool.connect();
+        // ------------ hash the password using bycrypt before entering into the database -----------
 
-        if (role === 'customer') {
-            const getLastCustIdResult = await client.query(
-                'SELECT MAX(cust_id) FROM customer'
-            );
-            const lastCustId = getLastCustIdResult.rows[0].max || 0;
-            const newCustId = lastCustId + 1;
+        userInsertResult = await conn.query(
+            'INSERT INTO USERS(emailid, phoneno, pwd) VALUES($1, $2, $3) returning userid',
+            [email, phone_no, password]
+        );
 
-            userInsertResult = await client.query(
-                'INSERT INTO customer (cust_id, username, password, p_no, email, credit_card_no, delivery_addr) VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING cust_id',
-                [newCustId, username, password, p_no, email, credit_card_no, delivery_addr]
-            );
-        } else if (role === 'seller') {
-            const getLastSellerIdResult = await client.query(
-                'SELECT MAX(seller_id) FROM seller'
-            );
-            const lastSellerId = getLastSellerIdResult.rows[0].max || 0;
-            const newSellerId = lastSellerId + 1;
+        const userid = userInsertResult.rows[0].userid;
+        // console.log("Userid: ", userid);
 
-            userInsertResult = await client.query(
-                'INSERT INTO seller (seller_id, username, password) VALUES ($1, $2, $3) RETURNING seller_id',
-                [newSellerId, username, password]
-            );
-        }
-
-        const user_id = userInsertResult.rows[0][role + '_id'];
-
-        client.release();
-        return NextResponse.json({ message: 'Registration Successful', user_id }, { status: 200 });
+        return NextResponse.json({ message: 'Registration Successful', userid }, { status: 200 });
     } catch (error) {
-        console.error(error);
+
+        console.error("Error:", error);
+
         if (error.message.includes('User with email')) {
             return NextResponse.json({ error: 'User with this username already exists' }, { status: 400 });
         } else {

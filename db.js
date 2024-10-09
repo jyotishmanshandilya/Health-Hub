@@ -1,23 +1,15 @@
-// import { Pool } from 'pg';
-
-// const pool = new Pool({
-//   user: 'postgres',
-//   password: 'Johnny#2003',
-//   host: 'localhost',
-//   port: 5433,
-//   database: 'hh',
-// });
-
-// export default pool;
-
 import { Pool } from 'pg';
 
-const pool = new Pool({
-  user: 'postgres',
-  password: 'aditya',
-  host: 'localhost',
-  port: 5432,
-  database: 'hh',
-});
+let conn;
 
-export default pool;
+if(!conn){
+    conn  = new Pool({
+    user: process.env.PGSQL_USER,
+    password: process.env.PGSQL_PASSWORD,
+    host: process.env.PGSQL_HOST,
+    port: process.env.PGSQL_PORT,
+    database: process.env.PGSQL_DB,
+  });
+}
+
+export default conn;

@@ -1,59 +1,37 @@
 'use client'
-import { useEffect, useState } from 'react';
+import { useSelector } from 'react-redux';
 
-export default function Products() {
-  const [products, setProducts] = useState([]);
+export default function Products({ productid }) {
+  const state = useSelector((state) => state.product.products)
+  const data = state.filter((product) => product.productid == productid)
 
-  useEffect(() => {
-    async function fetchProducts() {
-      try {
-        const response = await fetch('/api/products'); // Assuming you create a new API route named 'products'
-        if (response.ok) {
-          const data = await response.json();
-          setProducts(data);
-        } else {
-          console.error('Failed to fetch products.');
-        }
-      } catch (error) {
-        console.error('An error occurred while fetching products:', error);
-      }
-    }
-
-    fetchProducts();
-  }, []);
+  // displaying only the top 2 product items in each product
+  const products = data[0].productitems.slice(0,2)
 
   if(!products){
     return <div>Loading...</div>
   }
 
   return (
-    <div className="bg-white">
-      <div className="mx-auto max-w-2xl px-4 py-16 sm:px-6 sm:py-24 lg:max-w-7xl lg:px-8">
-        <h2 className="text-2xl font-bold tracking-tight text-gray-900">Our Products</h2>
-
-        <div className="mt-6 grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-4 xl:gap-x-8">
+    <div>
+      <div className="mx-auto max-w-2xl px-4 sm:px-6 py-4 lg:max-w-7xl lg:px-8">
+        <div className="mt-6 grid grid-cols-1 gap-x-2 lg:grid-cols-2 xl:gap-x-8">
           {products.map((product) => (
-            <div key={product.p_id} className="group relative border p-5 rounded-xl">
-              <div className="aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-md bg-gray-200 lg:aspect-none group-hover:opacity-75 lg:h-80">
+            <div key={product.productitemid} className="group relative border p-5 rounded-xl bg-white">
+            <a href={`/product/${productid}/${product.productitemid}`}>
+              <div className="w-full overflow-hidden rounded-md bg-gray-200 lg:aspect-none group-hover:opacity-75">
                 <img
-                  src={product.image1}
-                  alt={product.p_name}
-                  className="h-full w-full object-cover object-center lg:h-full lg:w-full"
+                  src={product.imageurl}
+                  alt={product.productitemtitle}
+                  className="h-full w-full object-cover object-center"
                 />
               </div>
-              <div className="mt-4 flex justify-between">
-                <div>
-                  <h3 className="text-sm text-gray-900 font-semibold">
-                    <a href={`/product/${product.p_id}`}>
-                      <span aria-hidden="true" className="absolute inset-0" />
-                      {product.p_name}
-                    </a>
-                  </h3>
-                  <p className="mt-1 text-sm text-gray-500">{product.description}</p>
-                  <p className="mt-3 text-sm text-gray-700">{`Rs ${product.price}`}</p>
-                </div>
+              <div className="mt-4 flex justify-between items-center gap-3">
+                <p className="flex-grow mt-1 text-sm text-gray-500 truncate">{product.productitemtitle}</p>
+                <p className="flex-none mt-3 text-sm text-gray-700">Rs {product.price}</p>
               </div>
-            </div>
+            </a>
+          </div>
           ))}
         </div>
       </div>

@@ -2,7 +2,7 @@
 import Nav from '@/components/Nav'
 import './globals.css'
 import { Inter } from 'next/font/google'
-import { SessionProvider } from 'next-auth/react'
+import StoreProviders from '../providers/StoreProviders'
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -11,14 +11,14 @@ const metadata = {
   description: 'Health and Wellness Ecommerce Store',
 }
 
-export default function RootLayout({ children, session }) {
+export default function RootLayout({ children }) {
   return (
-    <html lang="en">
+    <html lang="en" metadata={metadata}>
       <body className={inter.className}>
-        <SessionProvider session={session}>
+        <StoreProviders>
           <Nav/>
           {children}
-        </SessionProvider>
+        </StoreProviders>
       </body>
     </html>
   )

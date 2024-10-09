@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 import pool from '../../../../../db';
 
-export async function GET(req,{params}){
+export async function GET(req, { params }){
   const productId = params.slug;
   try {
     const client = await pool.connect();
@@ -18,7 +18,7 @@ export async function GET(req,{params}){
   }
 }
 
-export async function POST(req,{params}){  
+export async function POST(req, { params }){  
     const productId = params.slug;
     const body = await req.json();
     const { description, rating, date, newProductDetails } = body;

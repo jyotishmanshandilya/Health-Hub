@@ -8,6 +8,7 @@ const page = ({ params }) => {
 
     const productid = params.slug;
     const state = useSelector((state) => state.product.products)
+    console.log("State: ", state);
     const data = state.filter((product) => product.productid == productid)
 
     let products;
@@ -19,12 +20,8 @@ const page = ({ params }) => {
         productTitle = data[0].productTitle
     }
 
-    useEffect(() => {
-      dispatch(fetchProducts())
-    }, [])
-
     if(!products){
-        return <div className='text-center py-48'>Loading...</div>
+      return <div className='text-center py-48'>Loading...</div>
     }
     
     console.log(products)

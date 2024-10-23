@@ -10,7 +10,7 @@ const Login = () => {
   const router = useRouter();
   const dispatch = useDispatch();
   const [ login, { isLoading } ] = useLoginMutation();
-  const [ verify, { isVerifyLoading } ] = useVerifyMutation();
+  const [ verify ] = useVerifyMutation();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
@@ -22,19 +22,24 @@ const Login = () => {
         password
       }).unwrap()
 
-      // decode the jwt auth to retireve the information
-      const decode = await verify({
-        token: res.token
-      }).unwrap()
+      try {
+        // decode the jwt auth to retireve the information
+        const decode = await verify({
+          token: res.token
+        }).unwrap()
+        // console.log("Decode after login: ", decode);
+  
+        dispatch(loginState({
+          userid: decode.userid,
+          email: decode.emailid,
+          token: res.token,
+        }))
 
-      dispatch(loginState({
-        userid: decode.userid,
-        email: decode.emailid,
-        token: res.token,
-      }))
-
-      alert('Login Succesful !!')
-      router.push('/')
+        alert('Login Succesful !!')
+        router.push('/')
+      } catch (error) {
+        console.log("Error in token verification: ", error);
+      }
     } catch (err) {
       console.log("Error in logging in: ", err);
       alert("Invalid Credentials")

@@ -2,10 +2,6 @@
 import { useState, useEffect } from 'react';
 // import { StarIcon } from '@heroicons/react/20/solid';
 
-function classNames(...classes) {
-  return classes.filter(Boolean).join(' ');
-}
-
 export default function ProductPage({ params }) {
   const [productDetails, setProductDetails] = useState(null);
   const [reviews, setReviews] = useState([]);

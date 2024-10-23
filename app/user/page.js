@@ -1,4 +1,5 @@
 'use client'
+import { withAuth } from '@/lib/hoc/withAuth';
 import Link from 'next/link';
 import React, { useEffect, useState } from 'react';
 
@@ -87,4 +88,4 @@ const User = () => {
   );  
 };
 
-export default User;
+export default withAuth(User);

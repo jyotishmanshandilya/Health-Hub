@@ -19,7 +19,7 @@ export default function Category({ categoryId }) {
                         <div className='flex justify-between gap-5'>
                             <h2 className='text-xl text-gray-900 text-left ml-10 text-semibold'>{product.title}</h2>
                             <button className="mr-10 flex flex-row gap-2 items-center bg-transparent hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded">
-                                <a href={`/category/${categoryId}/products/${product.productid}`}>View all {product.title}s</a>
+                                <a href={`/category/${categoryId}/products/${product.productid}`}>View all</a>
                                 <svg
                                 xmlns="http://www.w3.org/2000/svg"
                                 viewBox="0 0 20 20"

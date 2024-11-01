@@ -5,13 +5,13 @@ import { useRouter } from 'next/navigation';
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useGetTokenQuery, useLogoutMutation, useVerifyMutation } from '@/lib/features/user/userApi';
-import { loginState, logoutState } from '@/lib/features/user/userSlice';
+import { loginState, logoutState, selectCurrentUser } from '@/lib/features/user/userSlice';
 
 const Nav = () => {
   const dispatch = useDispatch();
   const router = useRouter();
 
-  const currentUser = useSelector((state) => state.user.user); // Use Redux state directly for user
+  const currentUser = useSelector(selectCurrentUser); // Use Redux state directly for user
   const { data } = useGetTokenQuery();
   const [logout] = useLogoutMutation();
   const [verify] = useVerifyMutation();
@@ -20,7 +20,7 @@ const Nav = () => {
   useEffect(() => {
     const handleTokenVerification = async (token) => {
       try {
-        const decoded = await verify({ token: token.value }).unwrap();
+        const decoded = await verify({ token: token.value }).unwrap()
         dispatch(loginState({
           userid: decoded.userid,
           email: decoded.emailid,
@@ -34,13 +34,15 @@ const Nav = () => {
     if (data?.token) {
       handleTokenVerification(data.token);
     }
-  }, [data, verify, dispatch]);
+  }, [data?.token, verify, dispatch]);
 
   // Logout logic
   const handleUserLogout = async () => {
     try {
-      await logout().unwrap(); // destroy the cookie
-      dispatch(logoutState()); // clear user data from redux
+      await logout()
+      .unwrap() // destroy the cookie
+      .then(() => dispatch(logoutState())); // clear user data from redux
+      alert("Signed out successfully")
       router.push('/auth/login'); 
     } catch (error) {
       alert("Failed to logout");
@@ -58,7 +60,7 @@ const Nav = () => {
             {currentUser?.email ? (
               <p>{currentUser.email}</p>
             ) : (
-              <p>Dashboard</p>
+              <p>Guest</p>
             )}
           </Link>
           <Link href={currentUser?.email ? '' : '/auth/login'} className="hover:bg-white hover:text-gray-900 border rounded-lg px-3 py-2">

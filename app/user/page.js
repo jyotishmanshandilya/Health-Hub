@@ -1,91 +1,124 @@
 'use client'
-import { withAuth } from '@/lib/hoc/withAuth';
-import Link from 'next/link';
-import React, { useEffect, useState } from 'react';
 
-const User = () => {
-  //const [userInfo, setUserInfo] = useState({});
-  //const [orderHistory, setOrderHistory] = useState({});
-  //const [allReviews, setallReviews] = useState({});
-  const [allData, setAllData] = useState({});
+import { useGetUserDataQuery, useGetUserReviewsQuery } from "@/lib/features/user/userApi"
+import { withAuth } from "@/lib/hoc/withAuth"
+import { Mail, Phone, MapPin, Home, Building, Building2, Flag, Globe } from "lucide-react"
+import { StarIcon } from '@heroicons/react/20/solid'
 
-  useEffect(() => {
-    async function fetchUserData(){
-      try {
-        const response = await fetch('/api/user');
-        if(response.ok){
-          const data = await response.json();
-          setAllData(data);
-        }
-        else{
-          console.error('Failed to fetch user data.');
-        }
-      } catch (error) {
-        console.error('An error occurred while fetching user data:', error);
-      }
-    }
-    fetchUserData();
-  }, [])
-  
+const Page = () => {
+  const { data:userData, isLoading:isUserDataLoading } = useGetUserDataQuery();
+  const { data:userReviews, isLoading:isUserReviewsLoading } = useGetUserReviewsQuery();
 
-  const userInfo = allData.customer_info;
-  const orderHistory = allData.order_history;
-  const allReviews = allData.user_reviews;
+  if(!isUserDataLoading) console.log("Current User in user page:", userData);
+  if(!isUserReviewsLoading) console.log("User Reviews in user page:", userReviews)
 
-  //console.log("all data: ",allData);
-  //console.log("customer data: ",userInfo);
-  //console.log("order history data: ",orderHistory);
-  //console.log("user review data: ", allReviews);
-  // style={{ backgroundImage: `url('/mainBg.jpg')`, backgroundSize: 'cover', backgroundPosition: 'center' }}
   return (
-    <div className="min-h-screen flex items-center justify-center m-16" >
-    <div className="p-8 rounded-lg shadow-lg w-full max-w-screen-xl bg-gray-100" style={{ backgroundColor: 'rgba(200, 200, 200, 0.9)', borderRadius: '10px' }}>
-      <h1 className="text-4xl font-bold mb-4 text-black text-center">User Dashboard</h1>
+    <div className="container mx-auto p-5 my-16">
+      <h1 className="text-2xl font-bold mb-5">User Dashboard</h1>
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-6">
 
-      <div className="mb-16">
-      <h2 className="text-xl font-semibold mb-4 text-black">User Information</h2>
-          {userInfo &&
-             <ul className="text-gray">
-              <li>Username: {userInfo.username}</li>
-              <li>Email: {userInfo.email}</li>
-              <li>Delivery Address: {userInfo.delivery_addr}</li>
-            </ul>
-          }
-        </div>
-
-        <div className="mb-24">
-          <h2 className="text-xl font-semibold mb-4 text-black">Order History</h2>
-          <div className='grid grid-cols-4 gap-10'>
-            {orderHistory && orderHistory.map((product, index)=>(
-              <div key={index} className="text-gray mb-4 p-5 py-10 bg-white rounded-xl">
-                <img
-                  src={product.image1}
-                  alt={product.name}
-                  className="h-full w-full object-cover object-center rounded-lg"
-                />
-                <div className='flex justify-between px-2'>
-                  <Link href={`/product/${product.productId}`} className='text-md font-semibold'>{product.name}</Link>
-                  <p className='text-sm'>Rs. {product.price}</p>
-                </div>
-                <br/>
+        {/* User Profile div */}
+        <div className="col-span-1 lg:cols-span-2 xl:col-span-1 border border-gray-400 rounded-lg p-8">
+          {!isUserDataLoading ? (
+            <div className="grid gap-4 text-gray-500 font-medium">
+              <p className="text-xl font-semibold text-gray-600">{userData.firstname} {userData.lastname}</p>
+              <div className="flex items-center gap-4">
+                <Mail/>
+                <span>{userData.emailid}</span>
               </div>
-            ))}
-          </div>
-        </div>
-  
-        <div>
-        <h2 className="text-xl font-semibold mb-4 text-black">User Reviews</h2>
-          {allReviews && allReviews.map((review, index) => (
-            <div key={index} className="mb-4">
-              <Link href={`/product/${review.productId}`} className='text-black'>{review.description}</Link>
-              <p className='text-gray font-semibold'>Rating: {review.rating}/5</p>
-              <br/>
+              <div className="flex items-center gap-4">
+                <Phone/>
+                <span>{userData.phoneno}</span>
+              </div>
             </div>
-          ))}
+          ):(
+            <div className="text-center">Loading...</div>
+          )}
+        </div>
+
+        {/* Address div */}
+        <div className="col-span-1 lg:col-span-2 xl:col-span-2 border border-gray-400 rounded-lg p-8">
+          <p className="text-xl font-semibold text-gray-600 mb-5">Address</p>
+          {!isUserDataLoading ? (
+            <div className="grid gap-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-gray-500 font-medium">
+                <div className="flex items-center gap-2">
+                  <Home className="text-gray-500" />
+                  <span>{userData.unit}</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <Building className="text-gray-500" />
+                  <span>{userData.street}</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <Building2 className="text-gray-500" />
+                  <span>{userData.city}</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <MapPin className="text-gray-500" />
+                  <span>{userData.statename}</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <Flag className="text-gray-500" />
+                  <span>{userData.country}</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <Globe className="text-gray-500" />
+                  <span>{userData.pincode}</span>
+                </div>
+              </div>
+            </div>
+          ):(
+            <div className="text-center">Loading...</div>
+          )}
+        </div>
+      </div>
+
+      {/* user reviews */}
+      <div className="border border-gray-400 rounded-lg p-8">
+        <h2 className="text-xl font-semibold mb-5 text-gray-600">My Reviews</h2>
+        <div className="text-md grid grid-cols-1 lg:grid-cols-2 gap-5 text-gray-600">
+          {!isUserReviewsLoading ? userReviews.length > 0 ? (
+            userReviews.map((review) => (
+              <a key={review.reviewid} href={`/category/${review.catid}/products/${review.pid}/productitem/${review.ptid}`} className="border rounded-lg px-3 py-5 hover:border-blue-500">
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-10 items-center">
+                  <div className="w-full overflow-hidden rounded-md bg-gray-200 lg:aspect-none group-hover:opacity-75">
+                    <img
+                      src={review.imageurl}
+                      alt={review.productitemtitle}
+                      className="h-full w-full object-cover object-center"
+                    />
+                  </div>
+                  <div className="md:col-span-2">
+                    <div className="grid grid-cols-1 md:grid-cols-2">
+                      <p className="font-semibold">{review.productitemtitle}</p>
+                      <div className="flex items-center justify-end mr-5">
+                          <div className="flex items-center">
+                            {[0, 1, 2, 3, 4].map((star) => (
+                                <StarIcon
+                                key={star}
+                                aria-hidden="true"
+                                className={review.rating > star ? 'text-gray-900 h-5 w-5 flex-shrink-0' : 'text-gray-200 h-5 w-5 flex-shrink-0'}
+                                />
+                            ))}
+                          </div>
+                          <p className="sr-only">{review.rating} out of 5 stars</p>
+                      </div>
+                    </div>
+                    <p className='text-sm mt-2 text-gray-600'>"{review.description}"</p>
+                  </div>
+                </div>
+              </a>
+            ))
+          ) : (
+            <div className="text-center p-10">You haven't posted any reviews yet</div>
+          ) : (
+            <div className="text-center p-10">Loading...</div>
+          )}
         </div>
       </div>
     </div>
-  );  
-};
+  )
+}
 
-export default withAuth(User);
+export default withAuth(Page);

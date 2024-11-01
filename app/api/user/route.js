@@ -1,51 +1,45 @@
-import pool from '../../../db';
+import { cookies } from 'next/headers';
 import { NextResponse } from 'next/server';
+import jwt from 'jsonwebtoken'
+import conn from '@/db';
+
+const secret = process.env.JWT_SECRET;
 
 export async function GET(req, res){
+  // get token from cookies
+  const token = cookies().get('token');
+
+  if(!token){
+    return NextResponse.json({msg: "Jwt Token Not Found"}, {status:404});
+  }
+
   try {
-    const client = await pool.connect();
+    // decode token and get userid 
+    const decode  = jwt.verify(token.value, secret);
+    const { userid } = decode;
 
-    //fetching latest logged in user
-    const custIdQuery = 'SELECT Cust_id FROM Login ORDER BY Login_id DESC LIMIT 1';
-    const custIdResult = await client.query(custIdQuery);
-    const cust_id = custIdResult.rows[0].cust_id;
-    
-    const customer_result = await client.query(`SELECT * FROM Customer WHERE Cust_id = ${cust_id}`);
-    const customer_info = customer_result.rows[0];
+    // retrieve the user details using the userid
+    const res = await conn.query(`select 
+        userid, 
+        emailid, 
+        phoneno, 
+        firstname, 
+        lastname, 
+        unit, 
+        street, 
+        city, 
+        statename, 
+        country, 
+        pincode 
+        from users
+      natural join useraddress
+      natural join address
+      where userid = ${userid}`);
 
-    const all_order_history = await client.query(
-        `SELECT P.P_id, P.P_name, P.Description, P.Price, P.image1
-        FROM Product P, PlacesOrder PO
-        WHERE PO.Cust_id =
-         ${cust_id} AND P.P_id = PO.P_id`
-    );
-
-    const order_history = all_order_history.rows.map((row) => ({
-        productId: row.p_id,
-        name: row.p_name,
-        quantity: row.quantity,
-        image1: row.image1,
-        price: row.price
-    }))
-
-
-    const all_user_reviews = await client.query(`
-        SELECT R.Review_id, R.Description, R.Rating, H.P_id
-        FROM Review R, Gives G, Has H
-        WHERE G.Cust_id =  ${cust_id} AND R.Review_id = G.Review_id AND H.Review_id = R.Review_id;`
-    );
-
-    const user_reviews = all_user_reviews.rows.map((row) => ({
-        productId: row.p_id,
-        reviewId: row.review_id,
-        description: row.description,
-        rating: row.rating
-    }))
-
-    client.release();
-    return NextResponse.json({customer_info, order_history, user_reviews}, { status: 200 });
+    const userDetails = res.rows[0];
+    return NextResponse.json(userDetails, {status:200})
   } catch (error) {
-    console.error('Error fetching user details:', error);
-    return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
+    console.log("Invalid Token: ", error);
+    return NextResponse.json({err: error}, {status: 500});
   }
 };

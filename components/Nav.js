@@ -70,6 +70,9 @@ const Nav = () => {
               <p>Sign In</p>
             )}
           </Link>
+          <Link href='/cart' className="hover:bg-white hover:text-gray-900 border rounded-lg px-3 py-2">
+            <p>Cart</p>
+          </Link>
         </div>
       </div>
     </nav>

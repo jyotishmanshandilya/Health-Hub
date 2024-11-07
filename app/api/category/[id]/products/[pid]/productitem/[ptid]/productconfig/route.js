@@ -5,7 +5,7 @@ export async function GET(req, { params }){
     const { id, pid, ptid } = params;
     const productitemId = parseInt(ptid);
     try {
-        const res = await conn.query(`select productitemid, variationvalue, variationname 
+        const res = await conn.query(`select variationid, variationname, variationoptionid, variationvalue
             from productconfig
             natural join variationoptions 
             natural join variations
@@ -18,13 +18,18 @@ export async function GET(req, { params }){
         
         data.forEach((dataItem) => {
             if(!productConfig[dataItem.variationname]){
-                productConfig[dataItem.variationname] = [];
+                productConfig[dataItem.variationname] = {
+                    variationId: dataItem.variationid,
+                    data: [],
+                };
             }
-            productConfig[dataItem.variationname].push(dataItem.variationvalue);
+            productConfig[dataItem.variationname].data.push({
+                variationoptionId: dataItem.variationoptionid,
+                value: dataItem.variationvalue
+            });
         });
 
         console.log("Product config dict: ", productConfig);
-
         return NextResponse.json(productConfig, { status:200 });
     } catch (error) {
         console.log("Error in fetching product config: ", error);

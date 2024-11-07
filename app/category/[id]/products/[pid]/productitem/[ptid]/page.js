@@ -1,41 +1,58 @@
 'use client'
 
 import { StarIcon } from '@heroicons/react/20/solid'
-import { useGetProductConfigWithIdQuery, useGetProductitemWithIdQuery, useGetProductReviewsWithIdQuery } from '@/lib/features/product/productApi'
-import { useState, useEffect } from 'react'
+import { useAddProductitemToCartMutation, useGetProductConfigWithIdQuery, useGetProductitemWithIdQuery, useGetProductReviewsWithIdQuery } from '@/lib/features/product/productApi'
+import { useState } from 'react'
 
 const page = ({ params }) => {
     const { id, pid, ptid } = params;
     const { data:productitemData, isLoading:isProductitemsLoading } = useGetProductitemWithIdQuery({categoryId: id, productId: pid, productitemId: ptid});
     const { data:productConfigData, isLoading:isProductConfigLoading } = useGetProductConfigWithIdQuery({categoryId: id, productId: pid, productitemId: ptid});
     const { data:productReviewsData, isLoading:isProductReviewsLoading } = useGetProductReviewsWithIdQuery({categoryId: id, productId: pid, productitemId: ptid});
+    const [ addProductitemToCart ] = useAddProductitemToCartMutation();
 
     // Initialize state for storing selected variations and qty
     const [selectedVariations, setSelectedVariations] = useState({});
     const [quantity, setQuantity] = useState(1)
 
     // Handle variation selection
-    const handleVariationChange = (variationName, value) => {
+    const handleVariationChange = (variation, variationId, id, value) => {
         setSelectedVariations((prev) => ({
             ...prev,
-            [variationName]: value,
+            [variation]: {
+                variationId,
+                data: {
+                    id,
+                    value
+                }
+            },
         }));
     };
 
     // Handle quantity change
     const handleQuantityChange = (value) => {
-        console.log("Onclick button: ", value)
         setQuantity(value);
     }    
 
     const handleAddToCart = async () => {
-        // call the respective rtk query
-        // send followig data: ptid, qty, variation
+        console.log("Added item to bag")
+        console.log("Selected Items: ", selectedVariations);
+        console.log("Quantity: ", quantity)
+        try {
+            const res = await addProductitemToCart({productitemId: ptid, qty: quantity, productConfig: selectedVariations }).unwrap();
+            console.log("Added To cart: ", res);
+            alert("Added To Cart!!");
+            setSelectedVariations({});
+            setQuantity(1);
+        } catch (error) {
+            console.log("Error in adding to cart: ", error);
+            alert("Failed to add to cart: ");
+        }
     }
 
-    if(!isProductitemsLoading) console.log(productitemData[0])
-    if(!isProductConfigLoading) console.log(productConfigData)
-    if(!isProductReviewsLoading) console.log(productReviewsData)
+    // if(!isProductitemsLoading) console.log(JSON.stringify(productitemData[0]))
+    // if(!isProductConfigLoading) console.log(JSON.stringify(productConfigData))
+    // if(!isProductReviewsLoading) console.log(JSON.stringify(productReviewsData))
  
     return (
         <div className="bg-white">
@@ -83,37 +100,30 @@ const page = ({ params }) => {
                             </div>
                         }
                         
-                        {!isProductConfigLoading && Object.keys(productConfigData).map((variationName) => (
-                            <div key={variationName} className="my-4">
-                                <p className="text-lg font-semibold">{variationName}</p>
+                        {!isProductConfigLoading && Object.keys(productConfigData).map((variation) => (
+                            <div key={productConfigData[variation].variationId} className="my-4">
+                                <p className="text-lg font-semibold">{variation}</p>
                                 <select
-                                    value={selectedVariations[variationName] || ''}
-                                    onChange={(e) => handleVariationChange(variationName, e.target.value)}
+                                    value={selectedVariations[variation]?.data?.id || ''}
+                                    onChange={(e) => {
+                                        const selectedOption = productConfigData[variation].data.find(
+                                            (option) => option.variationoptionId === parseInt(e.target.value)
+                                        );
+                                        handleVariationChange(variation, productConfigData[variation].variationId, selectedOption.variationoptionId, selectedOption.value)
+                                    }}
                                     className="mt-2 block w-full rounded-md border border-gray-300 bg-white py-2 px-3 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                                 >
                                     <option value="" disabled>
-                                        Select {variationName}
+                                        Select {variation}
                                     </option>
-                                    {productConfigData[variationName].map((option) => (
-                                        <option key={option} value={option}>
-                                            {option}
+                                    {productConfigData[variation].data.map((option) => (
+                                        <option key={option.variationoptionId} value={option.variationoptionId}>
+                                            {option.value}
                                         </option>
                                     ))}
                                 </select>
                             </div>
                         ))}
-
-                        {/* Display Selected Variations */}
-                        {!isProductConfigLoading && Object.keys(productConfigData).length > 0  && (
-                            <div className="mt-6">
-                                <h3 className="text-lg font-semibold">Selected Options:</h3>
-                                {Object.entries(selectedVariations).map(([name, value]) => (
-                                    <p key={name}>
-                                        {name}: {value}
-                                    </p>
-                                ))}
-                            </div>
-                        )}
 
                         <div className='grid grid-cols-2 items-center gap-5 mt-10'>
                             {!isProductitemsLoading ? (
@@ -135,9 +145,15 @@ const page = ({ params }) => {
                                 ):(
                                 <div className='text-center'>Loading...</div>
                             )}
+
                             <button
+                                disabled={Object.keys(selectedVariations).length === 0}
                                 type="button"
-                                className="flex w-full items-center justify-center rounded-md border border-transparent bg-blue-500 px-8 py-3 text-base font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+                                className={`flex w-full items-center justify-center rounded-md border border-transparent px-8 py-3 text-base font-medium text-white 
+                                    ${Object.keys(selectedVariations).length === 0 
+                                        ? 'bg-gray-300 cursor-not-allowed' 
+                                        : 'bg-blue-500 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2'
+                                    }`}
                                 onClick={handleAddToCart}
                             >
                                 Add to bag
